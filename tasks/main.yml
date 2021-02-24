@@ -1,0 +1,42 @@
+---
+# tasks file for ansible-role-installdattoagent
+- name: Ensure pip is installed
+  package:
+    name: python3-pip
+    state: present
+
+- name: Ensure pexpect is installed
+  pip:
+    name: pexpect
+    state: present
+
+- name: Gather list of running services
+  service_facts:
+
+- block:
+    - name: Download Datto install script
+      get_url: 
+        url: "{{ datto_agent_url }}"
+        dest: /tmp/datto.sh
+        mode: 0755
+
+    - name: Run shell script
+      expect:
+        command: /tmp/datto.sh
+        responses:
+          To continue.*: "y"
+      ignore_errors: true    
+
+    - name: Add Datto apt key
+      apt_key:
+        keyserver: "{{ datto_apt_keyserver }}"
+        id: "{{ datto_apt_key }}" 
+      when: ansible_os_family == "Debian"
+
+    - name: Add Datto apt repository
+      apt_repository:
+        repo: "{{ datto_apt_repo }}"
+        state: present
+        filename: datto-linux-agent
+      when: ansible_os_family == "Debian"
+  when: "'dlad.service' not in ansible_facts.services"        
