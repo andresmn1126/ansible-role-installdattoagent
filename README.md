@@ -1,22 +1,26 @@
-Role Name
+Install Datto agent
 =========
 
-A brief description of the role goes here.
+Anisble role to install Datto backup agent on Linux
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+Must have a Datto device on the network to connect agent deployed.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
-
-Dependencies
-------------
-
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+`\defaults\main.yml`
+```
+datto_agent_url: "https://cpkg.datto.com/getLinuxAgent.txt"
+datto_apt_keyserver: "keyserver.ubuntu.com"
+datto_apt_key: "370C85D709D26407"
+datto_apt_repo: "deb [arch=amd64] https://cpkg.datto.com/datto-deb/public/{{ansible_distribution_release}} {{ansible_distribution_release}} main"
+```
+```
+OS family specific variables are loaded to install the correct version of the kernel-headers
+```
 
 Example Playbook
 ----------------
@@ -25,14 +29,5 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - ansible-role-installdattoagent
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
