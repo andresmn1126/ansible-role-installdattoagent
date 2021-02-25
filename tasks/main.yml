@@ -1,5 +1,13 @@
 ---
 # tasks file for ansible-role-installdattoagent
+- name: Include OS specific vars
+  include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install kernel packages
+  package:
+    name: "{{ kernel_headers }}"
+    state: present  
+
 - name: Ensure pip is installed
   package:
     name: python3-pip
