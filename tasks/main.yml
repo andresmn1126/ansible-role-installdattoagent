@@ -33,7 +33,8 @@
         command: /tmp/datto.sh
         responses:
           To continue.*: "y"
-      ignore_errors: true    
+      register: dattoagent_installed
+      failed_when: dattoagent_installed.rc != 0      
 
     - name: Add Datto apt key
       apt_key:
